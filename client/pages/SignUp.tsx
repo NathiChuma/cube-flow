@@ -3,10 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { COUNTRIES } from "@/lib/countries";
+import { signUp, User } from "@shared/api";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -30,8 +31,8 @@ export default function SignUp() {
     setError("");
 
     // Validation
-    if (!formData.name.trim()) {
-      setError("Name is required");
+    if (!formData.username.trim()) {
+      setError("Username is required");
       return;
     }
     if (!formData.email.includes("@")) {
@@ -52,21 +53,27 @@ export default function SignUp() {
     }
 
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      // Store user info in localStorage (in real app, send to server)
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          id: Date.now().toString(),
-          name: formData.name,
-          email: formData.email,
-          country: formData.country,
-        })
-      );
-      setIsLoading(false);
-      navigate("/timer");
-    }, 1000);
+
+    // API call
+
+    await signUp(formData.username, formData.email, formData.password, formData.country)
+      .then((data) => {
+        if ("error" in data) {
+          setError(data.error);
+          setIsLoading(false);
+          return;
+        }else{
+          // Store user info in localStorage
+          localStorage.setItem("user", JSON.stringify(data));
+          navigate("/");
+        }
+
+        
+      })
+      .catch((err) => {
+        setError(err.message);
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -92,17 +99,17 @@ export default function SignUp() {
               </div>
             )}
 
-            {/* Name Field */}
+            {/* Username Field */}
             <div>
               <label className="block text-sm font-medium mb-2 text-foreground">
-                Full Name
+                Username
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
-                placeholder="John Doe"
+                placeholder="JohnDoe"
                 className="w-full px-4 py-2.5 sm:py-3 rounded-lg border border-border bg-card text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>

@@ -2,12 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Zap, LogOut, Moon, Sun } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useDarkMode } from "@/hooks/useDarkMode";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+import { User } from "@shared/api";
 
 export function Header() {
   const [user, setUser] = useState<User | null>(null);
@@ -86,10 +81,10 @@ export function Header() {
                 <div className="hidden sm:flex items-center gap-2 text-xs sm:text-sm">
                   <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
                     <span className="text-primary font-semibold">
-                      {user.name.charAt(0).toUpperCase()}
+                      {user.username.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="text-foreground/60">{user.name}</span>
+                  <span className="text-foreground/60">{user.username}</span>
                 </div>
                 <button
                   onClick={handleLogout}

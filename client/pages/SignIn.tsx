@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
+import { signIn } from "@shared/api";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -35,28 +36,39 @@ export default function SignIn() {
     }
 
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      // Check for demo account
-      if (
-        formData.email === "demo@cubeflow.app" &&
-        formData.password === "demo123"
-      ) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            id: "demo-123",
-            name: "Demo User",
-            email: formData.email,
-          })
-        );
+
+    if (
+      formData.email === "demo@cubeflow.app" &&
+      formData.password === "demo123"
+    ) {
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          id: "demo-123",
+          username: "Demo User",
+          email: formData.email,
+        })
+      );
+      setIsLoading(false);
+      navigate("/timer");
+    } else {
+      await signIn(formData.email, formData.password)
+      .then((data) => {
+        // Store user info in localStorage
+        if ("error" in data) {
+          setError(data.error + ". Try demo@cubeflow.app / demo123");
+          setIsLoading(false);
+          return;
+        } else {
+          localStorage.setItem("user", JSON.stringify(data));
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        setError(err.message);
         setIsLoading(false);
-        navigate("/timer");
-      } else {
-        setIsLoading(false);
-        setError("Invalid email or password. Try demo@cubeflow.app / demo123");
-      }
-    }, 1000);
+      });
+    }
   };
 
   const handleDemoLogin = () => {
