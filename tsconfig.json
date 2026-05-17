@@ -26,6 +26,7 @@
     "strictNullChecks": false,
 
     /* Path mapping */
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./client/*"],
@@ -34,10 +35,8 @@
   },
   "include": [
     "client/**/*",
-    "server/**/*",
     "shared/**/*",
-    "vite.config.ts",
-    "vite.config.server.ts"
+    "vite.config.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

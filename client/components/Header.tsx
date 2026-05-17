@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Zap, LogOut } from "lucide-react";
+import { Zap, LogOut, Moon, Sun } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useDarkMode } from "@/hooks/useDarkMode";
 
 interface User {
   id: string;
@@ -12,6 +13,7 @@ export function Header() {
   const [user, setUser] = useState<User | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { isDark, toggle } = useDarkMode();
 
   useEffect(() => {
     const userStr = localStorage.getItem("user");
@@ -63,6 +65,19 @@ export function Header() {
               </Link>
             </nav>
           )}
+
+          {/* Dark Mode Toggle */}
+            <button
+              onClick={toggle}
+              className="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {isDark ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </button>
 
           {/* Right Side */}
           <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
