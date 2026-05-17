@@ -1,0 +1,149 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * Tailwind CSS theme - Rubik's Cube Trainer
+   * Modern, vibrant color scheme for speedcubing
+   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
+   * A different format will require also updating the theme in tailwind.config.ts.
+  */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 210 11% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 11% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 11% 15%;
+
+    --primary: 262 80% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 84% 60%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 11% 90%;
+    --muted-foreground: 210 11% 40%;
+
+    --accent: 262 80% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 210 11% 92%;
+    --input: 210 11% 96%;
+    --ring: 262 80% 50%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 210 11% 15%;
+
+    --sidebar-primary: 262 80% 50%;
+
+    --sidebar-primary-foreground: 0 0% 100%;
+
+    --sidebar-accent: 0 84% 60%;
+
+    --sidebar-accent-foreground: 0 0% 100%;
+
+    --sidebar-border: 210 11% 92%;
+
+    --sidebar-ring: 262 80% 50%;
+  }
+
+  .dark {
+    --background: 210 11% 12%;
+    --foreground: 210 11% 95%;
+
+    --card: 210 11% 18%;
+    --card-foreground: 210 11% 95%;
+
+    --popover: 210 11% 18%;
+    --popover-foreground: 210 11% 95%;
+
+    --primary: 262 80% 60%;
+    --primary-foreground: 210 11% 12%;
+
+    --secondary: 0 84% 65%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 11% 28%;
+    --muted-foreground: 210 11% 70%;
+
+    --accent: 262 80% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 210 11% 28%;
+    --input: 210 11% 22%;
+    --ring: 262 80% 60%;
+    --sidebar-background: 210 11% 10%;
+    --sidebar-foreground: 210 11% 90%;
+    --sidebar-primary: 262 80% 60%;
+    --sidebar-primary-foreground: 210 11% 12%;
+    --sidebar-accent: 0 84% 65%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 210 11% 28%;
+    --sidebar-ring: 262 80% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", sans-serif;
+  }
+
+  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  pre,
+  code {
+    overflow-x: auto;
+    white-space: pre;
+    font-family: "Space Mono", monospace;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+}
+
+@layer components {
+  .timer-display {
+    @apply font-mono text-6xl font-bold text-primary tracking-tight;
+  }
+
+  .gradient-primary {
+    @apply bg-gradient-to-r from-primary to-secondary;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg font-semibold transition-colors px-6 py-3;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-lg font-semibold transition-colors px-6 py-3;
+  }
+}
