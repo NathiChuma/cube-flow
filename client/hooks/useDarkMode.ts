@@ -1,19 +1,14 @@
 import { useEffect, useState } from "react";
 
 export function useDarkMode() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    // Check if user has a saved preference
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
     const saved = localStorage.getItem("darkMode");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
     if (saved !== null) {
-      setIsDark(saved === "true");
-    } else {
-      setIsDark(prefersDark);
+      return saved === "true";
     }
-  }, []);
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
 
   useEffect(() => {
     const root = document.documentElement;
