@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { Link } from "react-router-dom";
 import { ArrowRight, TrendingUp, Award, Target, Clock, Zap } from "lucide-react";
-import { statsData, userStats, practiceHistory, achievements } from "@/lib/dummy-data";
+//import { statsData, userStats, practiceHistory, achievements } from "@/lib/dummy-data";
 import {
   LineChart,
   Line,
@@ -16,9 +16,32 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { getUserStats, UserStats } from "@shared/api";
+import { useEffect, useState } from "react";
 
 export default function Stats() {
   const COLORS = ["#A020F0", "#FF4500", "#10B981", "#F59E0B"];
+  const [statsData, setStatsData] = useState<UserStats | null>(null);
+
+  useEffect(() => {
+
+    const fetchUserStats = async () => {
+
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        // Fetch user stats from API and update state
+        await getUserStats(user.id).then((data) => {
+          if (!("error" in data)) {
+            //Update userStats with real data
+            setStatsData(data as UserStats);
+          }
+        });
+      }
+    };
+
+    fetchUserStats();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
@@ -39,7 +62,7 @@ export default function Stats() {
               <p className="text-xs sm:text-sm font-semibold text-foreground/60">BEST</p>
               <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
             </div>
-            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 font-mono">{userStats.bestTime}s</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 font-mono">{statsData?.userStats.bestTime}s</p>
             <p className="text-xs text-foreground/50 mt-1">Personal Record</p>
           </div>
 
@@ -48,7 +71,7 @@ export default function Stats() {
               <p className="text-xs sm:text-sm font-semibold text-foreground/60">AVG</p>
               <Target className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
             </div>
-            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-mono">{userStats.avgTime}s</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-mono">{statsData?.userStats.avgTime}s</p>
             <p className="text-xs text-foreground/50 mt-1">All Solves</p>
           </div>
 
@@ -57,7 +80,7 @@ export default function Stats() {
               <p className="text-xs sm:text-sm font-semibold text-foreground/60">AO5</p>
               <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-secondary" />
             </div>
-            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-secondary font-mono">{userStats.ao5}s</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-secondary font-mono">{statsData?.userStats.ao5}s</p>
             <p className="text-xs text-foreground/50 mt-1">Last 5</p>
           </div>
 
@@ -66,7 +89,7 @@ export default function Stats() {
               <p className="text-xs sm:text-sm font-semibold text-foreground/60">TOTAL</p>
               <Award className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
             </div>
-            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-mono">{userStats.totalSolves}</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-mono">{statsData?.userStats.totalSolves}</p>
             <p className="text-xs text-foreground/50 mt-1">All Time</p>
           </div>
         </div>
@@ -78,7 +101,7 @@ export default function Stats() {
             <h2 className="text-base sm:text-lg font-bold mb-4">Average Time Trend</h2>
             <div className="w-full h-48 sm:h-64 md:h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={statsData.timeTrend} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                <LineChart data={statsData?.timeTrend} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="time" stroke="hsl(var(--foreground)/0.6)" fontSize={11} />
                   <YAxis stroke="hsl(var(--foreground)/0.6)" fontSize={11} width={35} />
@@ -107,7 +130,7 @@ export default function Stats() {
             <h2 className="text-base sm:text-lg font-bold mb-4">Session Performance</h2>
             <div className="w-full h-48 sm:h-64 md:h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={statsData.sessions.slice(0, 6)} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                <BarChart data={statsData?.sessions.slice(0, 6)} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="date" stroke="hsl(var(--foreground)/0.6)" fontSize={10} angle={-45} textAnchor="end" height={60} />
                   <YAxis stroke="hsl(var(--foreground)/0.6)" fontSize={11} width={35} />
@@ -134,10 +157,10 @@ export default function Stats() {
                 <PieChart margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                   <Pie
                     data={[
-                      { name: "Excellent", value: statsData.consistency.excellent },
-                      { name: "Good", value: statsData.consistency.good },
-                      { name: "Fair", value: statsData.consistency.fair },
-                      { name: "Poor", value: statsData.consistency.poor },
+                      { name: "Excellent", value: statsData?.consistency.excellent },
+                      { name: "Good", value: statsData?.consistency.good },
+                      { name: "Fair", value: statsData?.consistency.fair },
+                      { name: "Poor", value: statsData?.consistency.poor },
                     ]}
                     cx="50%"
                     cy="50%"
@@ -169,34 +192,34 @@ export default function Stats() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">Ao12</span>
-                <span className="font-mono font-bold text-primary text-sm sm:text-base">{userStats.ao12}s</span>
+                <span className="font-mono font-bold text-primary text-sm sm:text-base">{statsData?.userStats.ao12}s</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">Ao50</span>
-                <span className="font-mono font-bold text-primary text-sm sm:text-base">{userStats.ao50}s</span>
+                <span className="font-mono font-bold text-primary text-sm sm:text-base">{statsData?.userStats.ao50}s</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">Ao100</span>
-                <span className="font-mono font-bold text-primary text-sm sm:text-base">{userStats.ao100}s</span>
+                <span className="font-mono font-bold text-primary text-sm sm:text-base">{statsData?.userStats.ao100}s</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">Worst Time</span>
-                <span className="font-mono font-bold text-red-500 text-sm sm:text-base">{userStats.worstTime}s</span>
+                <span className="font-mono font-bold text-red-500 text-sm sm:text-base">{statsData?.userStats.worstTime}s</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">DNF Rate</span>
-                <span className="font-mono font-bold text-orange-500 text-sm sm:text-base">{userStats.dnfRate}</span>
+                <span className="font-mono font-bold text-orange-500 text-sm sm:text-base">{statsData?.userStats.dnfRate}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-foreground/60">Best Streak</span>
-                <span className="font-mono font-bold text-green-600 text-sm sm:text-base">{userStats.longestStreak}</span>
+                <span className="font-mono font-bold text-green-600 text-sm sm:text-base">{statsData?.userStats.longestStreak}</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Practice History */}
-        <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-8 w-full overflow-x-hidden">
+        {/* <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-8 w-full overflow-x-hidden">
           <h2 className="text-base sm:text-lg font-bold mb-4">Recent Practice History</h2>
           <div className="space-y-2 sm:space-y-3">
             {practiceHistory.map((entry, idx) => (
@@ -223,13 +246,13 @@ export default function Stats() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Achievements */}
         <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-8 w-full overflow-x-hidden">
           <h2 className="text-base sm:text-lg font-bold mb-4">Achievements</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
-            {achievements.map((achievement) => (
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
+            {statsData?.achievements.map((achievement) => (
               <div
                 key={achievement.id}
                 className={`text-center p-2 sm:p-3 md:p-4 rounded-lg border transition-all ${

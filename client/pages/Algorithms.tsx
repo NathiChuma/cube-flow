@@ -34,8 +34,8 @@ export default function Algorithms() {
         </span>
       </div>
 
-      <div className="bg-foreground/5 border border-border rounded-lg p-4 mb-4">
-        <code className="text-sm sm:text-base font-mono font-bold text-primary break-all">
+      <div className="bg-foreground/5 border border-border rounded-lg p-4 mb-4 overflow-x-auto">
+        <code className="text-sm sm:text-base font-mono font-bold text-primary whitespace-nowrap">
           {algo.notation}
         </code>
       </div>
@@ -84,6 +84,28 @@ export default function Algorithms() {
           </div>
         </div>
       )}
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-background w-full overflow-x-hidden">
+      <Header />
+
+      <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Algorithms</h1>
+          <p className="text-sm sm:text-base text-foreground/60">
+            Browse OLL, PLL, and F2L algorithms and copy them to practice.
+          </p>
+        </div>
+
+        <div className="bg-card border border-border rounded-2xl p-12 text-center">
+          <h2 className="text-2xl font-bold mb-2">Coming Soon</h2>
+          <p className="text-foreground/60 max-w-sm mx-auto">
+            OLL, PLL, and F2L algorithms with practice mode are on the way.
+          </p>
+        </div>
+      </div>
     </div>
   );
 

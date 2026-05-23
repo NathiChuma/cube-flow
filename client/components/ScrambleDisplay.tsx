@@ -33,11 +33,17 @@ export function ScrambleDisplay({
         </button>
       </div>
 
-      <div className="bg-foreground/2 border border-border rounded-xl p-6 mb-4 min-h-[100px] flex items-center">
-        <code className="text-xl sm:text-2xl font-mono font-bold text-primary break-all">
+      <div className="bg-foreground/2 border border-border rounded-xl p-6 mb-4 min-h-[100px] flex items-center justify-center">
+        <code className="text-base sm:text-lg font-mono font-bold text-primary break-all leading-relaxed text-center">
           {scramble}
         </code>
       </div>
+
+      {/*<div className="bg-foreground/2 border border-border rounded-xl p-6 mb-4 min-h-[100px] flex items-center">
+        <code className="text-xl sm:text-2xl font-mono font-bold text-primary break-all">
+          {scramble}
+        </code>
+      </div>*/}
 
       <div className="flex gap-3">
         <button

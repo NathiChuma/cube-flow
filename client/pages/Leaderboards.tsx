@@ -16,6 +16,29 @@ export default function Leaderboards() {
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
       <Header />
 
+      <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Leaderboards</h1>
+          <p className="text-sm sm:text-base text-foreground/60">
+            Compete with the community. Campus rankings, global stats, and friendly competitions.
+          </p>
+        </div>
+
+        <div className="bg-card border border-border rounded-2xl p-12 text-center">
+          <Trophy className="w-16 h-16 text-primary/40 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold mb-2">Coming Soon</h2>
+          <p className="text-foreground/60 max-w-sm mx-auto">
+            Leaderboards are on the way. Global rankings, campus competitions, and monthly tournaments — stay tuned.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-background w-full overflow-x-hidden">
+      <Header />
+
       <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12 pb-12">
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Leaderboards</h1>

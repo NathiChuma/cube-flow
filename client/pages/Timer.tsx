@@ -8,18 +8,19 @@ import {
   getScrambleHistory,
 } from "@/lib/scramble-generator";
 import { Trash2 } from "lucide-react";
-
-interface Solve {
-  id: string;
-  time: number;
-  scramble: string;
-  timestamp: Date;
-  dnf?: boolean;
-}
+import { User, Solve, CreateSolveRequest, addSolve } from "@shared/api";
 
 export default function Timer() {
   const [scramble, setScramble] = useState("");
   const [solves, setSolves] = useState<Solve[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  
+  useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      setUser(JSON.parse(userStr));
+    }
+  }, [location]);
 
   // Initialize scramble
   useEffect(() => {
@@ -45,15 +46,23 @@ export default function Timer() {
     saveScrambleToHistory(newScramble);
   };
 
-  const handleSolveComplete = (timeMs: number) => {
-    const newSolve: Solve = {
-      id: Date.now().toString(),
+  const handleSolveComplete = async (timeMs: number) => {
+    const newSolve: CreateSolveRequest = {
+      userId: user ? user.id : "guest",
       time: timeMs,
       scramble,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
+      dnf: false,
     };
 
-    setSolves([newSolve, ...solves]);
+    const solve = await addSolve(newSolve);
+
+    if ("error" in solve) {
+      console.error("Error adding solve:", solve.error);
+      return;
+    }
+
+    setSolves([solve, ...solves]);
     generateNewScramble();
   };
 

@@ -178,6 +178,23 @@ export default function Index() {
 
           {/* Feature 4 */}
           <Link
+            to="/algorithms"
+            className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-shadow hover:border-primary/50 cursor-pointer group"
+          >
+            <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
+              <Target className="w-6 h-6 text-primary" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">Algorithm Trainer</h3>
+            <p className="text-foreground/60 mb-4">
+              Master OLL, PLL, and F2L algorithms with guided practice and execution time tracking.
+            </p>
+            <div className="flex items-center gap-2 text-primary font-semibold text-sm group-hover:translate-x-1 transition-transform">
+              Structured learning <ArrowRight className="w-4 h-4" />
+            </div>
+          </Link>
+
+          {/* Feature 5 */}
+          <Link
             to="/analysis"
             className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-shadow hover:border-primary/50 cursor-pointer group"
           >

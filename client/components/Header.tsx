@@ -46,18 +46,24 @@ export function Header() {
               >
                 Timer
               </Link>
-              <Link
+              {/*<Link
                 to="/algorithms"
                 className="text-xs sm:text-sm md:text-base text-foreground/80 hover:text-foreground transition-colors font-medium"
               >
                 Algorithms
-              </Link>
+              </Link> */}
               <Link
                 to="/stats"
                 className="text-xs sm:text-sm md:text-base text-foreground/80 hover:text-foreground transition-colors font-medium"
               >
                 Stats
               </Link>
+              {/*<Link
+                to="/leaderboards"
+                className="text-xs sm:text-sm md:text-base text-foreground/80 hover:text-foreground transition-colors font-medium"
+              >
+                Leaderboards
+              </Link>*/}
             </nav>
           )}
 

@@ -1,5 +1,26 @@
 // Dummy data for the Rubik's Cube Trainer app
 
+export const globalLeaderboards = {
+  topTen : [
+    { rank: 1, name: "Nathi Chen", time: "17.21", pb: "16.89", ao5: "17.95", ao12: "18.34", country: "🇺🇸" },
+    { rank: 2, name: "Liam O'Brien", time: "19.04", pb: "18.42", ao5: "19.34", ao12: "19.67", country: "🇨🇦" },
+    { rank: 3, name: "Kayla Rodriguez", time: "21.87", pb: "21.45", ao5: "22.11", ao12: "22.56", country: "🇲🇽" },
+    { rank: 4, name: "Marcus Johnson", time: "23.56", pb: "22.98", ao5: "23.89", ao12: "24.12", country: "🇬🇧" },
+    { rank: 5, name: "Sarah Kim", time: "25.32", pb: "24.78", ao5: "25.67", ao12: "26.01", country: "🇰🇷" },
+    { rank: 6, name: "Alex Petrov", time: "26.45", pb: "25.89", ao5: "26.78", ao12: "27.23", country: "🇷🇺" },
+    { rank: 7, name: "Emma Thompson", time: "27.12", pb: "26.45", ao5: "27.56", ao12: "28.01", country: "🇦🇺" },
+    { rank: 8, name: "Diego Santos", time: "28.34", pb: "27.89", ao5: "28.67", ao12: "29.12", country: "🇧🇷" },
+    { rank: 9, name: "Diego Santos", time: "28.34", pb: "27.89", ao5: "28.67", ao12: "29.12", country: "🇧🇷" },
+    { rank: 10, name: "Diego Santos", time: "28.34", pb: "27.89", ao5: "28.67", ao12: "29.12", country: "🇧🇷" },
+  ],
+  userRanking: {
+    rank: 127,
+    Username: "Nathi Chen",
+    bestTime: "17.89",
+    
+  }
+};
+
 export const globalLeaderboard = [
   { rank: 1, name: "Nathi Chen", time: "17.21", pb: "16.89", ao5: "17.95", ao12: "18.34", country: "🇺🇸" },
   { rank: 2, name: "Liam O'Brien", time: "19.04", pb: "18.42", ao5: "19.34", ao12: "19.67", country: "🇨🇦" },
@@ -9,6 +30,8 @@ export const globalLeaderboard = [
   { rank: 6, name: "Alex Petrov", time: "26.45", pb: "25.89", ao5: "26.78", ao12: "27.23", country: "🇷🇺" },
   { rank: 7, name: "Emma Thompson", time: "27.12", pb: "26.45", ao5: "27.56", ao12: "28.01", country: "🇦🇺" },
   { rank: 8, name: "Diego Santos", time: "28.34", pb: "27.89", ao5: "28.67", ao12: "29.12", country: "🇧🇷" },
+  { rank: 9, name: "Diego Santos", time: "28.34", pb: "27.89", ao5: "28.67", ao12: "29.12", country: "🇧🇷" },
+  { rank: 10, name: "Diego Santos", time: "28.34", pb: "27.89", ao5: "28.67", ao12: "29.12", country: "🇧🇷" },
 ];
 
 export const campusLeaderboard = [
@@ -116,6 +139,7 @@ export const statsData = {
     { date: "2024-01-18", solves: 20, bestTime: 19.78, avgTime: 23.45, ao5: 22.89 },
     { date: "2024-01-19", solves: 30, bestTime: 18.56, avgTime: 22.12, ao5: 21.34 },
     { date: "2024-01-20", solves: 28, bestTime: 17.89, avgTime: 21.67, ao5: 20.78 },
+    { date: "2024-01-21", solves: 28, bestTime: 17.89, avgTime: 21.67, ao5: 20.78 },
   ],
   timeTrend: [
     { time: "Mon", value: 26.5 },
@@ -132,6 +156,29 @@ export const statsData = {
     fair: 15,
     poor: 5,
   },
+  userStats: {
+    totalSolves: 234,
+    bestTime: "17.89",
+    worstTime: "45.23",
+    avgTime: "23.45",
+    ao5: "19.34",
+    ao12: "20.78",
+    ao50: "21.45",
+    ao100: "22.12",
+    dnfCount: 3,
+    dnfRate: "1.3%",
+    totalTime: "1h 32m",
+    longestStreak: 45,
+    currentStreak: 12,
+  },
+  achievements: [
+    { id: 1, title: "First Solve", description: "Complete your first solve", icon: "🎯", unlocked: true, date: "2024-01-01" },
+    { id: 2, title: "Speed Racer", description: "Achieve a sub-20 time", icon: "⚡", unlocked: true, date: "2024-01-18" },
+    { id: 3, title: "Century Club", description: "Complete 100 solves", icon: "💯", unlocked: true, date: "2024-01-19" },
+    { id: 4, title: "Consistency King", description: "Achieve Ao12 within 2 seconds of best time", icon: "👑", unlocked: false },
+    { id: 5, title: "Algorithm Master", description: "Learn 10 algorithms", icon: "🧠", unlocked: false },
+    { id: 6, title: "Leaderboard Legend", description: "Reach top 10 global rankings", icon: "🏆", unlocked: false },
+  ]
 };
 
 export const userStats = {
@@ -150,21 +197,20 @@ export const userStats = {
   currentStreak: 12,
 };
 
+export const achievements = [
+  { id: 1, title: "First Solve", description: "Complete your first solve", icon: "🎯", unlocked: true, date: "2024-01-01" },
+  { id: 2, title: "Speed Racer", description: "Achieve a sub-20 time", icon: "⚡", unlocked: true, date: "2024-01-18" },
+  { id: 3, title: "Century Club", description: "Complete 100 solves", icon: "💯", unlocked: true, date: "2024-01-19" },
+  ///{ id: 4, title: "Consistency King", description: "Achieve Ao12 within 2 seconds of best time", icon: "👑", unlocked: false },
+  //{ id: 5, title: "Leaderboard Legend", description: "Reach top 10 global rankings", icon: "🏆", unlocked: false },
+];
+
 export const practiceHistory = [
   { date: "2024-01-20", type: "Timed Session", duration: "45min", solves: 28, best: "17.89", avg: "21.67" },
   { date: "2024-01-19", type: "Algorithm Practice", duration: "30min", algorithm: "T-Perm", reps: 50 },
   { date: "2024-01-18", type: "Timed Session", duration: "60min", solves: 30, best: "18.56", avg: "22.12" },
   { date: "2024-01-17", type: "F2L Drills", duration: "25min", pairs: 100, avg: "8.5s" },
   { date: "2024-01-16", type: "Timed Session", duration: "50min", solves: 25, best: "20.45", avg: "24.89" },
-];
-
-export const achievements = [
-  { id: 1, title: "First Solve", description: "Complete your first solve", icon: "🎯", unlocked: true, date: "2024-01-01" },
-  { id: 2, title: "Speed Racer", description: "Achieve a sub-20 time", icon: "⚡", unlocked: true, date: "2024-01-18" },
-  { id: 3, title: "Century Club", description: "Complete 100 solves", icon: "💯", unlocked: true, date: "2024-01-19" },
-  { id: 4, title: "Consistency King", description: "Achieve Ao12 within 2 seconds of best time", icon: "👑", unlocked: false },
-  { id: 5, title: "Algorithm Master", description: "Learn 10 algorithms", icon: "🧠", unlocked: false },
-  { id: 6, title: "Leaderboard Legend", description: "Reach top 10 global rankings", icon: "🏆", unlocked: false },
 ];
 
 export const dailyChallenge = {

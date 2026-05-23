@@ -228,12 +228,22 @@ export function SolveTimer({ onSolveComplete }: SolveTimerProps) {
                 </button>
               </>
             ) : (
-              <button
-                onClick={() => setDnf(false)}
-                className="flex items-center gap-2 bg-green-500/20 text-green-600 hover:bg-green-500/30 active:bg-green-500/40 rounded-lg font-semibold py-2 px-4 sm:py-2 sm:px-6 transition-colors text-sm sm:text-base"
-              >
-                Undo DNF
-              </button>
+              <>
+                <button
+                  onClick={() => setDnf(false)}
+                  className="flex items-center gap-2 bg-green-500/20 text-green-600 hover:bg-green-500/30 active:bg-green-500/40 rounded-lg font-semibold py-2 px-4 sm:py-2 sm:px-6 transition-colors text-sm sm:text-base"
+                >
+                  Undo DNF
+                </button>
+                <button
+                  onClick={handleFinish}
+                  className="flex items-center gap-2 bg-red-500 text-white hover:bg-red-600 active:bg-red-700 rounded-lg font-semibold py-2 px-4 sm:py-2 sm:px-6 transition-colors text-sm sm:text-base"
+                >
+                  <Check className="w-4 h-4" />
+                  Save DNF
+                </button>
+              </>
+              
             )}
           </>
         )}
