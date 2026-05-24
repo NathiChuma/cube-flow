@@ -86,8 +86,8 @@ export function SolveTimer({ onSolveComplete }: SolveTimerProps) {
   };
 
   const handleFinish = () => {
-    if (!dnf && time > 0) {
-      onSolveComplete(time);
+    if (time > 0) {
+      onSolveComplete(dnf ? -1 : time);
       handleReset();
     }
   };

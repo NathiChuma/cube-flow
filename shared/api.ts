@@ -1,4 +1,10 @@
-import { error } from "console";
+export interface PlatformStats {
+  activeCubers: number;
+  solvesTracked: number;
+  averageSolveTime: number;
+  totalDNFs: number;
+  totalCubeTime: string;
+}
 
 export interface User {
   id: string;
@@ -87,8 +93,25 @@ interface AIAnalysis {
   scoreLabel: string;
 }
 
+export var platformStatsCache: PlatformStats | null = null;
+
 //const API_BASE = "http://localhost:3000/";
 const API_BASE = "https://cube-flow-backend.vercel.app/";
+
+export async function getPlatformStats(): Promise<void> {
+  const response = await fetch(`${API_BASE}stats/getPlatformStats`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    console.error({ error: data.error || "Failed to fetch platform stats" });
+  }
+
+  platformStatsCache = data as PlatformStats;
+}
 
 export async function signIn(email: string, password: string): Promise<User | {error: string}> {
   const response = await fetch(`${API_BASE}auth/signin`, {
@@ -122,6 +145,38 @@ export async function signUp(username: string, email: string, password: string, 
   return data.user as Promise<User | {error: string}>;
 }
 
+export async function sendResetPasswordEmail(email: string): Promise<{ success: boolean; error?: string }> {
+  const response = await fetch(`${API_BASE}auth/forgotPassword`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+  const data = await response.json();
+
+  if (data.error) {
+    return { success: false, error: data.error };
+  }
+
+  return { success: true };
+}
+
+export async function resetPassword(email: string, code: string, password: string): Promise<{ success: boolean; error?: string }> {
+  const response = await fetch(`${API_BASE}auth/resetPassword`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, code, password }),
+  });
+
+  const data = await response.json();
+
+  if (data.error) {
+    return { success: false, error: data.error };
+  }
+
+  return { success: true };
+}
+
 export async function addSolve(solveData: CreateSolveRequest): Promise<Solve | {error: string}> {
   const response = await fetch(`${API_BASE}solves/addSolve`, {
     method: "POST",
@@ -147,7 +202,13 @@ export async function getUserSolves(userId: string): Promise<GetSolvesResponse> 
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
-  return response.json();
+
+  const data = await response.json();
+  if (data.error) {
+    return { solves: [], count: 0 };
+  }
+
+  return {solves: data, count: data.length};
 }
 
 export async function getAllSolves(): Promise<GetSolvesResponse> {
@@ -155,7 +216,14 @@ export async function getAllSolves(): Promise<GetSolvesResponse> {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
-  return response.json();
+
+  const data = await response.json();
+
+  if (data.error) {
+    return { solves: [], count: 0 };
+  }
+
+  return data as GetSolvesResponse;
 }
 
 export async function deleteSolve(solveId: string): Promise<{ success: boolean; error?: string }> {

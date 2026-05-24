@@ -97,6 +97,14 @@
     --sidebar-border: 210 11% 28%;
     --sidebar-ring: 262 80% 60%;
   }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 @layer base {

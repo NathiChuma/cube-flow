@@ -131,7 +131,7 @@ export const algorithms = {
   ],
 };
 
-export const statsData = {
+export const dummyStatsData = {
   sessions: [
     { date: "2024-01-15", solves: 12, bestTime: 22.34, avgTime: 26.78, ao5: 25.45 },
     { date: "2024-01-16", solves: 18, bestTime: 21.89, avgTime: 25.67, ao5: 24.12 },

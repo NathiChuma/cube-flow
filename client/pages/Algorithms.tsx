@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
 import { Link } from "react-router-dom";
-import { ArrowRight, Copy, Check, Play } from "lucide-react";
+import { Copy, Check, Play, BookOpen } from "lucide-react";
 import { algorithms } from "@/lib/dummy-data";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -100,6 +100,7 @@ export default function Algorithms() {
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-12 text-center">
+          <BookOpen className="w-16 h-16 text-primary/40 mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-2">Coming Soon</h2>
           <p className="text-foreground/60 max-w-sm mx-auto">
             OLL, PLL, and F2L algorithms with practice mode are on the way.

@@ -8,19 +8,53 @@ import {
   getScrambleHistory,
 } from "@/lib/scramble-generator";
 import { Trash2 } from "lucide-react";
-import { User, Solve, CreateSolveRequest, addSolve } from "@shared/api";
+import { User, Solve, CreateSolveRequest, addSolve, getUserSolves, deleteSolve } from "@shared/api";
 
 export default function Timer() {
   const [scramble, setScramble] = useState("");
   const [solves, setSolves] = useState<Solve[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  
+  const [dailyStats, setDailyStats] = useState({
+    solves: 0,
+    bestTime: null as number | null,
+    averageTime: null as number | null,
+    ao5: null as number | null,
+  });
+
   useEffect(() => {
     const userStr = localStorage.getItem("user");
     if (userStr) {
       setUser(JSON.parse(userStr));
     }
   }, [location]);
+
+  useEffect(() => {
+
+    if (user?.id === "demo-123") return; // Skip API calls for demo user
+
+    async function fetchUserSolves() {
+      await getUserSolves(user.id)
+      .then((data) => {
+        if ("error" in data) {
+          console.error("Error fetching user solves:", data.error);
+        } else {
+          setSolves(data.solves.filter(s => s.time !== -1));
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching user solves:", err);
+      });
+    }
+
+    if (user) {
+      fetchUserSolves();
+    }
+  }, [user]);
+
+  // Recalculate daily stats whenever solves change
+  useEffect(() => {
+    calculateDailyStats();
+  }, [solves]);
 
   // Initialize scramble
   useEffect(() => {
@@ -38,7 +72,7 @@ export default function Timer() {
   // Save solves to localStorage
   useEffect(() => {
     localStorage.setItem("solves", JSON.stringify(solves));
-  }, [solves]);
+  }, []);
 
   const generateNewScramble = () => {
     const newScramble = generateScramble(20);
@@ -52,21 +86,40 @@ export default function Timer() {
       time: timeMs,
       scramble,
       timestamp: new Date().toISOString(),
-      dnf: false,
+      dnf: timeMs === -1,
     };
 
-    const solve = await addSolve(newSolve);
+    if (user.id !== "demo-123") {
+      const solve = await addSolve(newSolve);
 
-    if ("error" in solve) {
-      console.error("Error adding solve:", solve.error);
-      return;
+      if ("error" in solve) {
+        console.error("Error adding solve:", solve.error);
+        return;
+      }
+
+      if (timeMs !== -1) {
+        setSolves([solve, ...solves]);
+      }
+    }else{
+
+      if (timeMs !== -1) {
+        setSolves([{...newSolve, id: Date.now().toString()}, ...solves]);
+      }
     }
-
-    setSolves([solve, ...solves]);
     generateNewScramble();
   };
 
-  const deleteSolve = (id: string) => {
+  const handleDelete = async (id: string) => {
+    await deleteSolve(id).then((data) => {
+      if (!data.success) {
+        console.error("Error deleting solve:", data.error);
+      } else {
+        setSolves(solves.filter((s) => s.id !== id));
+      }
+    })
+    .catch((err) => {
+      console.error("Error deleting solve:", err);
+    });
     setSolves(solves.filter((s) => s.id !== id));
   };
 
@@ -83,26 +136,33 @@ export default function Timer() {
   };
 
   // Calculate stats
-  const validSolves = solves.filter((s) => !s.dnf);
-  const bestTime =
-    validSolves.length > 0
-      ? Math.min(...validSolves.map((s) => s.time))
-      : null;
-  const worstTime =
-    validSolves.length > 0
-      ? Math.max(...validSolves.map((s) => s.time))
-      : null;
-  const averageTime =
-    validSolves.length > 0
-      ? validSolves.reduce((sum, s) => sum + s.time, 0) / validSolves.length
-      : null;
+  const calculateDailyStats = () => {
+    const today = new Date().toISOString().split("T")[0];
+    const todaysSolves = solves.filter((s) => s.timestamp.startsWith(today));
 
-  const ao5 =
-    validSolves.length >= 5
-      ? validSolves
-          .slice(0, 5)
-          .reduce((sum, s) => sum + s.time, 0) / 5
-      : null;
+    const validSolves = todaysSolves.filter((s) => !s.dnf);
+    const bestTime =
+      validSolves.length > 0
+        ? Math.min(...validSolves.map((s) => s.time))
+        : null;
+    const averageTime =
+      validSolves.length > 0
+        ? validSolves.reduce((sum, s) => sum + s.time, 0) / validSolves.length
+        : null;
+    const ao5 =
+      validSolves.length >= 5
+        ? validSolves
+            .slice(0, 5)
+            .reduce((sum, s) => sum + s.time, 0) / 5
+        : null;
+
+    setDailyStats({
+      solves: todaysSolves.length,
+      bestTime,
+      averageTime,
+      ao5,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
@@ -134,36 +194,36 @@ export default function Timer() {
             {/* Quick Stats */}
             <div className="bg-card border border-border rounded-2xl p-6">
               <h3 className="text-sm font-semibold text-foreground/60 uppercase tracking-wider mb-4">
-                Session Stats
+                Daily Stats
               </h3>
               <div className="space-y-4">
                 <div>
-                  <p className="text-foreground/60 text-sm mb-1">Solves</p>
+                  <p className="text-foreground/60 text-sm mb-1">Solves Today</p>
                   <p className="text-3xl font-bold text-primary">
-                    {solves.length}
+                    {dailyStats.solves}
                   </p>
                 </div>
-                {bestTime && (
+                {dailyStats.bestTime && (
                   <div>
                     <p className="text-foreground/60 text-sm mb-1">Best Time</p>
                     <p className="text-2xl font-bold text-green-600">
-                      {formatTime(bestTime)}
+                      {formatTime(dailyStats.bestTime)}
                     </p>
                   </div>
                 )}
-                {averageTime && (
+                {dailyStats.averageTime && (
                   <div>
                     <p className="text-foreground/60 text-sm mb-1">Average</p>
                     <p className="text-2xl font-bold text-foreground">
-                      {formatTime(averageTime)}
+                      {formatTime(dailyStats.averageTime)}
                     </p>
                   </div>
                 )}
-                {ao5 && (
+                {dailyStats.ao5 && (
                   <div>
                     <p className="text-foreground/60 text-sm mb-1">Ao5</p>
                     <p className="text-2xl font-bold text-primary">
-                      {formatTime(ao5)}
+                      {formatTime(dailyStats.ao5)}
                     </p>
                   </div>
                 )}
@@ -175,7 +235,7 @@ export default function Timer() {
               <h3 className="text-sm font-semibold text-foreground/60 uppercase tracking-wider mb-4">
                 Recent Solves
               </h3>
-              <div className="space-y-2 max-h-96 overflow-y-auto">
+              <div className="space-y-2 max-h-96 overflow-y-auto no-scrollbar">
                 {solves.length === 0 ? (
                   <p className="text-foreground/60 text-sm">
                     No solves yet. Start training!
@@ -186,17 +246,17 @@ export default function Timer() {
                       key={solve.id}
                       className="flex items-center justify-between gap-2 p-3 bg-foreground/5 rounded-lg group"
                     >
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <p className="font-mono font-bold">
                           {idx + 1}. {formatTime(solve.time)}
                         </p>
-                        <p className="text-xs text-foreground/50 truncate">
+                        <p className="text-xs text-foreground/50 truncate w-full">
                           {solve.scramble}
                         </p>
                       </div>
                       <button
-                        onClick={() => deleteSolve(solve.id)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity text-foreground/40 hover:text-red-500"
+                        onClick={() => handleDelete(solve.id)}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity text-foreground/40 hover:text-red-500 shrink-0"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

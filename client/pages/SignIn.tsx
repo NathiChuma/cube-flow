@@ -122,12 +122,12 @@ export default function SignIn() {
                 <label className="block text-sm font-medium text-foreground">
                   Password
                 </label>
-                <a
-                  href="#"
+                <Link
+                  to="/resetPassword"
                   className="text-xs text-primary hover:text-primary/80 transition-colors"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <div className="relative">
                 <input

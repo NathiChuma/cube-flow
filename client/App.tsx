@@ -16,6 +16,7 @@ import Algorithms from "./pages/Algorithms";
 import Analysis from "./pages/Analysis";
 import Leaderboards from "./pages/Leaderboards";
 import NotFound from "./pages/NotFound";
+import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
+            <Route path="/resetPassword" element={<ResetPassword />} />
             <Route
               path="/timer"
               element={

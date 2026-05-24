@@ -10,14 +10,29 @@ import {
   TrendingUp,
   Target,
 } from "lucide-react";
+import { platformStatsCache, PlatformStats, getPlatformStats } from "@shared/api";
 
 export default function Index() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [platformStats, setPlatformStats] = useState<PlatformStats | null>(null);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
     setIsLoggedIn(!!user);
   }, []);
+
+  useEffect(() => {
+
+    async function fetchStats() {
+      if (!platformStatsCache) {
+        await getPlatformStats();
+      }
+      setPlatformStats(platformStatsCache);
+    }
+
+    fetchStats();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 w-full overflow-x-hidden">
       <Header />
@@ -27,10 +42,10 @@ export default function Index() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           {/* Left Content */}
           <div>
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6 font-semibold text-xs sm:text-sm">
+            {/* <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6 font-semibold text-xs sm:text-sm">
               <Zap className="w-3 h-3 sm:w-4 sm:h-4" />
               The Speedcubing Gym
-            </div>
+            </div> */}
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-foreground leading-tight">
               Train. Analyze.
@@ -64,16 +79,36 @@ export default function Index() {
             {/* Stats */}
             <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-8">
               <div>
-                <div className="text-xl sm:text-2xl font-bold text-primary">1000+</div>
+                {platformStats ? (
+                  <div className="text-xl sm:text-2xl font-bold text-primary">{platformStats.activeCubers}</div>
+                ) : (
+                  <div className="text-xl sm:text-2xl font-bold text-primary">1000+</div>
+                )}
                 <p className="text-foreground/60 text-xs sm:text-sm">Active Cubers</p>
               </div>
               <div>
-                <div className="text-xl sm:text-2xl font-bold text-primary">50K+</div>
+                {platformStats ? (
+                  <div className="text-xl sm:text-2xl font-bold text-primary">{platformStats.solvesTracked}</div>
+                ) : (
+                  <div className="text-xl sm:text-2xl font-bold text-primary">50K+</div>
+                )}
                 <p className="text-foreground/60 text-xs sm:text-sm">Solves Tracked</p>
               </div>
               <div>
-                <div className="text-xl sm:text-2xl font-bold text-primary">99%</div>
-                <p className="text-foreground/60 text-xs sm:text-sm">Uptime</p>
+                {platformStats ? (
+                  <div className="text-xl sm:text-2xl font-bold text-primary">{platformStats.averageSolveTime}</div>
+                ) : (
+                  <div className="text-xl sm:text-2xl font-bold text-primary">10.5s</div>
+                )}
+                <p className="text-foreground/60 text-xs sm:text-sm">Average Solve Time</p>
+              </div>
+              <div>
+                {platformStats ? (
+                  <div className="text-xl sm:text-2xl font-bold text-primary">{platformStats.totalCubeTime}</div>
+                ) : (
+                  <div className="text-xl sm:text-2xl font-bold text-primary">1K+</div>
+                )}
+                <p className="text-foreground/60 text-xs sm:text-sm">Total Cube Time</p>
               </div>
             </div>
           </div>
@@ -252,30 +287,10 @@ export default function Index() {
       {/* Footer */}
       <footer className="border-t border-border py-8 sm:py-12 w-full">
         <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-center sm:text-left">
             <p className="text-xs sm:text-sm text-foreground/60">
-              © 2024 CubeFlow. Built for speedcubers, by speedcubers.
+              © 2026 CubeFlow. Built for speedcubers, by speedcubers.
             </p>
-            <div className="flex gap-4 sm:gap-6">
-              <a
-                href="#"
-                className="text-xs sm:text-sm text-foreground/60 hover:text-foreground transition-colors"
-              >
-                About
-              </a>
-              <a
-                href="#"
-                className="text-xs sm:text-sm text-foreground/60 hover:text-foreground transition-colors"
-              >
-                Privacy
-              </a>
-              <a
-                href="#"
-                className="text-xs sm:text-sm text-foreground/60 hover:text-foreground transition-colors"
-              >
-                Contact
-              </a>
-            </div>
           </div>
         </div>
       </footer>

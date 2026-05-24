@@ -7,7 +7,7 @@ import {
   Target,
   CheckCircle,
   Zap,
-  Loader2,
+  Loader2
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getUserStats, getUserAnalysis, UserStats } from "@shared/api";
@@ -41,7 +41,7 @@ export default function Analysis() {
 
   useEffect(() => {
     if (!statsData) return;
-    generateAIAnalysis(statsData);
+    //generateAIAnalysis(statsData);
   }, [statsData]);
 
   const generateAIAnalysis = async (stats: UserStats) => {
@@ -73,6 +73,7 @@ export default function Analysis() {
         </div>
 
         <div className="bg-card border border-border rounded-2xl p-12 text-center">
+          <TrendingUp className="w-16 h-16 text-primary/40 mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-2">Coming Soon</h2>
           <p className="text-foreground/60 max-w-sm mx-auto">
             AI-powered performance analysis, insights, and recommendations are on the way.

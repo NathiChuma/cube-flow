@@ -18,6 +18,7 @@ import {
 } from "recharts";
 import { getUserStats, UserStats } from "@shared/api";
 import { useEffect, useState } from "react";
+import { dummyStatsData } from "@/lib/dummy-data";
 
 export default function Stats() {
   const COLORS = ["#A020F0", "#FF4500", "#10B981", "#F59E0B"];
@@ -28,8 +29,9 @@ export default function Stats() {
     const fetchUserStats = async () => {
 
       const userStr = localStorage.getItem("user");
-      if (userStr) {
-        const user = JSON.parse(userStr);
+      const user = JSON.parse(userStr);
+
+      if (user && user.id !== "demo-123") {
         // Fetch user stats from API and update state
         await getUserStats(user.id).then((data) => {
           if (!("error" in data)) {
@@ -37,6 +39,9 @@ export default function Stats() {
             setStatsData(data as UserStats);
           }
         });
+      }else {
+        // For demo user, use dummy data
+        setStatsData(dummyStatsData as UserStats);
       }
     };
 
