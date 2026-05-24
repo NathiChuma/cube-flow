@@ -159,7 +159,7 @@ export default function Index() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Feature 1 */}
           <Link
             to="/timer"
@@ -179,23 +179,6 @@ export default function Index() {
 
           {/* Feature 2 */}
           <Link
-            to="/timer"
-            className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-shadow hover:border-primary/50 cursor-pointer group"
-          >
-            <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
-              <Zap className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="text-xl font-bold mb-2">Smart Scrambles</h3>
-            <p className="text-foreground/60 mb-4">
-              Official WCA scramble generation. Copy, share, and visualize scrambles with one click.
-            </p>
-            <div className="flex items-center gap-2 text-primary font-semibold text-sm group-hover:translate-x-1 transition-transform">
-              WCA Standard <ArrowRight className="w-4 h-4" />
-            </div>
-          </Link>
-
-          {/* Feature 3 */}
-          <Link
             to="/stats"
             className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-shadow hover:border-primary/50 cursor-pointer group"
           >
@@ -211,7 +194,7 @@ export default function Index() {
             </div>
           </Link>
 
-          {/* Feature 4 */}
+          {/* Feature 3 */}
           <Link
             to="/algorithms"
             className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-shadow hover:border-primary/50 cursor-pointer group"
@@ -228,24 +211,7 @@ export default function Index() {
             </div>
           </Link>
 
-          {/* Feature 5 */}
-          <Link
-            to="/analysis"
-            className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-shadow hover:border-primary/50 cursor-pointer group"
-          >
-            <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
-              <TrendingUp className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="text-xl font-bold mb-2">Performance Analysis</h3>
-            <p className="text-foreground/60 mb-4">
-              AI-powered insights into your slow phases and inconsistencies. Get personalized tips.
-            </p>
-            <div className="flex items-center gap-2 text-primary font-semibold text-sm group-hover:translate-x-1 transition-transform">
-              Smart analysis <ArrowRight className="w-4 h-4" />
-            </div>
-          </Link>
-
-          {/* Feature 6 */}
+          {/* Feature 4 */}
           <Link
             to="/leaderboards"
             className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-shadow hover:border-primary/50 cursor-pointer group"

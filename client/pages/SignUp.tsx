@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { COUNTRIES } from "@/lib/countries";
-import { signUp, User } from "@shared/api";
+import { getPlatformStats, signUp, User } from "@shared/api";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -26,6 +26,36 @@ export default function SignUp() {
     });
   };
 
+  const validatePassword = (password: string) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChars = /[@$!%*?&]/.test(password);
+
+    if (password.length < minLength) {
+      setError("Password must be at least 8 characters long");
+      return false;
+    }
+    if (!hasUpperCase) {
+      setError("Password must contain at least one uppercase letter");
+      return false;
+    }
+    if (!hasLowerCase) {
+      setError("Password must contain at least one lowercase letter");
+      return false;
+    }
+    if (!hasNumbers) {
+      setError("Password must contain at least one number");
+      return false;
+    }
+    if (!hasSpecialChars) {
+      setError("Password must contain at least one special character (@$!%*?&)");
+      return false;
+    }
+    return true;
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -39,14 +69,16 @@ export default function SignUp() {
       setError("Please enter a valid email");
       return;
     }
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
+
+    if (!validatePassword(formData.password)) {
+      return;
+    }
+
     if (!formData.country) {
       setError("Please select your country");
       return;
@@ -54,10 +86,9 @@ export default function SignUp() {
 
     setIsLoading(true);
 
-    // API call
-
+    // API call to sign up the user
     await signUp(formData.username, formData.email, formData.password, formData.country)
-      .then((data) => {
+      .then(async (data) => {
         if ("error" in data) {
           setError(data.error);
           setIsLoading(false);
@@ -65,10 +96,9 @@ export default function SignUp() {
         }else{
           // Store user info in localStorage
           localStorage.setItem("user", JSON.stringify(data));
+          await getPlatformStats();
           navigate("/");
         }
-
-        
       })
       .catch((err) => {
         setError(err.message);

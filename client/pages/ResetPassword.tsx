@@ -52,8 +52,6 @@ export default function ResetPassword() {
     e.preventDefault();
     setError("");
 
-    console.log("Form data on reset submit:", formData);
-
     if (!formData.code.trim()) {
       setError("Please enter the verification code");
       return;
@@ -64,13 +62,12 @@ export default function ResetPassword() {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+    if (!validatePassword(formData.password)) {
       return;
     }
 
@@ -78,12 +75,12 @@ export default function ResetPassword() {
 
     await resetPassword(formData.email, formData.code, formData.password)
       .then((result) => {
+        console.log("Reset password result:", result);
         if (!result.success) {
           setError(result.error || "Failed to reset password");
           setIsLoading(false);
           return;
         }
-        localStorage.removeItem("userResetEmail");
         setIsLoading(false);
         setStep("success");
       })
@@ -96,6 +93,36 @@ export default function ResetPassword() {
   const handleBackToSignIn = () => {
     navigate("/signin");
   };
+
+  const validatePassword = (password: string) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChars = /[@$!%*?&]/.test(password);
+
+    if (password.length < minLength) {
+      setError("Password must be at least 8 characters long");
+      return false;
+    }
+    if (!hasUpperCase) {
+      setError("Password must contain at least one uppercase letter");
+      return false;
+    }
+    if (!hasLowerCase) {
+      setError("Password must contain at least one lowercase letter");
+      return false;
+    }
+    if (!hasNumbers) {
+      setError("Password must contain at least one number");
+      return false;
+    }
+    if (!hasSpecialChars) {
+      setError("Password must contain at least one special character (@$!%*?&)");
+      return false;
+    }
+    return true;
+  }
 
   return (
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
