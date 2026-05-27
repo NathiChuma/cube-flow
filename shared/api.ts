@@ -1,3 +1,5 @@
+import { error } from "console";
+
 export interface PlatformStats {
   activeCubers: number;
   solvesTracked: number;
@@ -84,6 +86,7 @@ export interface UserStats {
     unlocked: boolean;
     date: string; // Date unlocked
   }[];
+  solves: Solve[]; // Include solves for detailed analysis
 }
 
 interface AIAnalysis {
@@ -94,6 +97,8 @@ interface AIAnalysis {
 }
 
 export var platformStatsCache: PlatformStats | null = null;
+export var userRecentSolvesCache: Record<string, GetSolvesResponse> = {};
+export var userStatsCache: Record<string, UserStats> = {};
 
 //const API_BASE = "http://localhost:3000/";
 const API_BASE = "https://cube-flow-backend.vercel.app/";
@@ -197,18 +202,19 @@ export async function addSolve(solveData: CreateSolveRequest): Promise<Solve | {
   return solveResponse;
 }
 
-export async function getUserSolves(userId: string): Promise<GetSolvesResponse> {
-  const response = await fetch(`${API_BASE}solves/getUserSolves/${userId}`, {
+export async function getUserRecentSolves(userId: string): Promise<void> {
+  const response = await fetch(`${API_BASE}solves/getUserRecentSolves/${userId}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
 
   const data = await response.json();
   if (data.error) {
-    return { solves: [], count: 0 };
+    userRecentSolvesCache[userId] = { solves: [], count: 0 };
   }
-
-  return {solves: data, count: data.length};
+  else{
+    userRecentSolvesCache[userId] = { solves: data, count: data.length };
+  }
 }
 
 export async function getAllSolves(): Promise<GetSolvesResponse> {
@@ -240,7 +246,7 @@ export async function deleteSolve(solveId: string): Promise<{ success: boolean; 
   return { success: true };
 }
 
-export async function getUserStats(userId: string): Promise<UserStats | { error: string }> {
+export async function getUserStats(userId: string): Promise<void> {
   const response = await fetch(`${API_BASE}stats/getUserStats/${userId}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -249,10 +255,10 @@ export async function getUserStats(userId: string): Promise<UserStats | { error:
   const data = await response.json();
 
   if (!response.ok) {
-    return { error: data.error || "Failed to fetch user stats" };
+    throw new Error(data.error || "Failed to fetch user stats");
   }
 
-  return data;
+  userStatsCache[userId] = data as UserStats;
 }
 
 export async function getUserAnalysis(userStats: UserStats): Promise<AIAnalysis> {

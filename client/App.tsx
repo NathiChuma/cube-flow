@@ -11,7 +11,7 @@ import Index from "./pages/Index";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Timer from "./pages/Timer";
-import Stats from "./pages/Stats";
+import Stats from "./pages/Statistics";
 import Algorithms from "./pages/Algorithms";
 import Analysis from "./pages/Analysis";
 import Leaderboards from "./pages/Leaderboards";
@@ -65,7 +65,7 @@ const App = () => {
               }
             />
             <Route
-              path="/stats"
+              path="/statistics"
               element={
                 <ProtectedRoute>
                   <Stats />

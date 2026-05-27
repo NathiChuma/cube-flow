@@ -53,10 +53,10 @@ export function Header() {
                 Algorithms
               </Link> */}
               <Link
-                to="/stats"
+                to="/statistics"
                 className="text-xs sm:text-sm md:text-base text-foreground/80 hover:text-foreground transition-colors font-medium"
               >
-                Stats
+                Statistics
               </Link>
               {/*<Link
                 to="/leaderboards"

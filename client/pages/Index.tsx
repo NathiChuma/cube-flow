@@ -10,7 +10,7 @@ import {
   TrendingUp,
   Target,
 } from "lucide-react";
-import { platformStatsCache, PlatformStats, getPlatformStats } from "@shared/api";
+import { platformStatsCache, PlatformStats, getPlatformStats, getUserRecentSolves, getUserStats, userRecentSolvesCache, userStatsCache } from "@shared/api";
 
 export default function Index() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,6 +19,15 @@ export default function Index() {
   useEffect(() => {
     const user = localStorage.getItem("user");
     setIsLoggedIn(!!user);
+
+    if (user) {
+      if (!userRecentSolvesCache[JSON.parse(user).id]) {
+        getUserRecentSolves(JSON.parse(user).id);
+      }
+      if (!userStatsCache[JSON.parse(user).id]) {
+        getUserStats(JSON.parse(user).id);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -179,7 +188,7 @@ export default function Index() {
 
           {/* Feature 2 */}
           <Link
-            to="/stats"
+            to="/statistics"
             className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-shadow hover:border-primary/50 cursor-pointer group"
           >
             <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">

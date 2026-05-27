@@ -1,24 +1,11 @@
 import { Header } from "@/components/Header";
 import { Link } from "react-router-dom";
 import { ArrowRight, TrendingUp, Award, Target, Clock, Zap } from "lucide-react";
-//import { statsData, userStats, practiceHistory, achievements } from "@/lib/dummy-data";
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { getUserStats, UserStats } from "@shared/api";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { getUserStats, UserStats, userStatsCache } from "@shared/api";
 import { useEffect, useState } from "react";
 import { dummyStatsData } from "@/lib/dummy-data";
+import { SolvesTable } from "@/components/SolvesTable";
 
 export default function Stats() {
   const COLORS = ["#A020F0", "#FF4500", "#10B981", "#F59E0B"];
@@ -31,14 +18,15 @@ export default function Stats() {
       const userStr = localStorage.getItem("user");
       const user = JSON.parse(userStr);
 
+      if (userStatsCache[user.id]) {
+        setStatsData(userStatsCache[user.id]);
+        return;
+      }
+
       if (user && user.id !== "demo-123") {
         // Fetch user stats from API and update state
-        await getUserStats(user.id).then((data) => {
-          if (!("error" in data)) {
-            //Update userStats with real data
-            setStatsData(data as UserStats);
-          }
-        });
+        await getUserStats(user.id);
+        setStatsData(userStatsCache[user.id]);
       }else {
         // For demo user, use dummy data
         setStatsData(dummyStatsData as UserStats);
@@ -54,7 +42,7 @@ export default function Stats() {
 
       <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12 pb-12">
         <div className="mb-8 sm:mb-12">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Stats Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Statistics Dashboard</h1>
           <p className="text-sm sm:text-base text-foreground/60">
             Visualize your progress and track your improvement over time.
           </p>
@@ -67,7 +55,7 @@ export default function Stats() {
               <p className="text-xs sm:text-sm font-semibold text-foreground/60">BEST</p>
               <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
             </div>
-            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 font-mono">{statsData?.userStats.bestTime}s</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 font-mono">{statsData?.userStats.bestTime ? `${statsData?.userStats.bestTime}s` : "-"}</p>
             <p className="text-xs text-foreground/50 mt-1">Personal Record</p>
           </div>
 
@@ -76,7 +64,7 @@ export default function Stats() {
               <p className="text-xs sm:text-sm font-semibold text-foreground/60">AVG</p>
               <Target className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
             </div>
-            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-mono">{statsData?.userStats.avgTime}s</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-mono">{statsData?.userStats.avgTime ? `${statsData?.userStats.avgTime}s` : "-"}</p>
             <p className="text-xs text-foreground/50 mt-1">All Solves</p>
           </div>
 
@@ -85,7 +73,7 @@ export default function Stats() {
               <p className="text-xs sm:text-sm font-semibold text-foreground/60">AO5</p>
               <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-secondary" />
             </div>
-            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-secondary font-mono">{statsData?.userStats.ao5}s</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-secondary font-mono">{statsData?.userStats.ao5 ? `${statsData?.userStats.ao5}s` : "-"}</p>
             <p className="text-xs text-foreground/50 mt-1">Last 5</p>
           </div>
 
@@ -94,7 +82,7 @@ export default function Stats() {
               <p className="text-xs sm:text-sm font-semibold text-foreground/60">TOTAL</p>
               <Award className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
             </div>
-            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-mono">{statsData?.userStats.totalSolves}</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-mono">{statsData?.userStats.totalSolves ? `${statsData?.userStats.totalSolves}` : "-"}</p>
             <p className="text-xs text-foreground/50 mt-1">All Time</p>
           </div>
         </div>
@@ -197,64 +185,42 @@ export default function Stats() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">Ao12</span>
-                <span className="font-mono font-bold text-primary text-sm sm:text-base">{statsData?.userStats.ao12}s</span>
+                <span className="font-mono font-bold text-primary text-sm sm:text-base">{statsData?.userStats.ao12 ? `${statsData?.userStats.ao12}s` : "-"}</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">Ao50</span>
-                <span className="font-mono font-bold text-primary text-sm sm:text-base">{statsData?.userStats.ao50}s</span>
+                <span className="font-mono font-bold text-primary text-sm sm:text-base">{statsData?.userStats.ao50 ? `${statsData?.userStats.ao50}s` : "-"}</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">Ao100</span>
-                <span className="font-mono font-bold text-primary text-sm sm:text-base">{statsData?.userStats.ao100}s</span>
+                <span className="font-mono font-bold text-primary text-sm sm:text-base">{statsData?.userStats.ao100 ? `${statsData?.userStats.ao100}s` : "-"}</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">Worst Time</span>
-                <span className="font-mono font-bold text-red-500 text-sm sm:text-base">{statsData?.userStats.worstTime}s</span>
+                <span className="font-mono font-bold text-red-500 text-sm sm:text-base">{statsData?.userStats.worstTime ? `${statsData?.userStats.worstTime}s` : "-"}</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">DNF Rate</span>
-                <span className="font-mono font-bold text-orange-500 text-sm sm:text-base">{statsData?.userStats.dnfRate}</span>
+                <span className="font-mono font-bold text-orange-500 text-sm sm:text-base">{statsData?.userStats.dnfRate ? `${statsData?.userStats.dnfRate}%` : "-"}</span>
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center pb-3 border-b border-border">
+                <span className="text-foreground/60">Current Streak</span>
+                <span className="font-mono font-bold text-green-600 text-sm sm:text-base">{statsData?.userStats.currentStreak ? `${statsData?.userStats.currentStreak}` : "-"}</span>
+              </div>
+              <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">Best Streak</span>
-                <span className="font-mono font-bold text-green-600 text-sm sm:text-base">{statsData?.userStats.longestStreak}</span>
+                <span className="font-mono font-bold text-green-600 text-sm sm:text-base">{statsData?.userStats.longestStreak ? `${statsData?.userStats.longestStreak}` : "-"}</span>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Practice History */}
-        {/* <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-8 w-full overflow-x-hidden">
-          <h2 className="text-base sm:text-lg font-bold mb-4">Recent Practice History</h2>
-          <div className="space-y-2 sm:space-y-3">
-            {practiceHistory.map((entry, idx) => (
-              <div key={idx} className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-foreground/5 rounded-lg hover:bg-foreground/10 transition-colors">
-                <div className="text-xl sm:text-2xl flex-shrink-0">
-                  {entry.type === "Timed Session"
-                    ? "⏱️"
-                    : entry.type === "Algorithm Practice"
-                      ? "🧠"
-                      : entry.type === "F2L Drills"
-                        ? "🎯"
-                        : "📊"}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm sm:text-base text-foreground">{entry.type}</p>
-                  <p className="text-xs sm:text-sm text-foreground/60">{entry.date}</p>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="font-mono font-bold text-primary text-xs sm:text-sm">
-                    {"solves" in entry ? `${entry.solves}` : "algorithm" in entry ? `${entry.reps}` : `${entry.pairs}`}
-                  </p>
-                  <p className="text-xs sm:text-sm text-foreground/60">{entry.duration}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div> */}
+        
+        {statsData?.solves && (
+          <SolvesTable solves={statsData.solves} />
+        )}
 
         {/* Achievements */}
-        <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-8 w-full overflow-x-hidden">
+        <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-8 mt-8 w-full overflow-x-hidden">
           <h2 className="text-base sm:text-lg font-bold mb-4">Achievements</h2>
           <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
             {statsData?.achievements.map((achievement) => (

@@ -8,7 +8,7 @@ import {
   getScrambleHistory,
 } from "@/lib/scramble-generator";
 import { Trash2 } from "lucide-react";
-import { User, Solve, CreateSolveRequest, addSolve, getUserSolves, deleteSolve } from "@shared/api";
+import { User, Solve, CreateSolveRequest, addSolve, getUserRecentSolves, deleteSolve, userRecentSolvesCache, getUserStats } from "@shared/api";
 
 export default function Timer() {
   const [scramble, setScramble] = useState("");
@@ -32,22 +32,19 @@ export default function Timer() {
 
     if (user?.id === "demo-123") return; // Skip API calls for demo user
 
-    async function fetchUserSolves() {
-      await getUserSolves(user.id)
-      .then((data) => {
-        if ("error" in data) {
-          console.error("Error fetching user solves:", data.error);
-        } else {
-          setSolves(data.solves.filter(s => s.time !== -1));
-        }
-      })
-      .catch((err) => {
-        console.error("Error fetching user solves:", err);
-      });
+    const fetchUserSolves = async () => {
+      await getUserRecentSolves(user.id);
+      if (userRecentSolvesCache[user.id]) {
+        setSolves(userRecentSolvesCache[user.id].solves.filter(s => s.time !== -1));
+      }
     }
 
-    if (user) {
+    if (user && !userRecentSolvesCache[user.id]) {
       fetchUserSolves();
+    }
+
+    if (userRecentSolvesCache[user?.id]) {
+      setSolves(userRecentSolvesCache[user.id].solves.filter(s => s.time !== -1));
     }
   }, [user]);
 
@@ -91,6 +88,8 @@ export default function Timer() {
 
     if (user.id !== "demo-123") {
       const solve = await addSolve(newSolve);
+      await getUserRecentSolves(user.id); // Refresh cache after adding solve
+      await getUserStats(user.id); // Refresh stats cache after adding solve
 
       if ("error" in solve) {
         console.error("Error adding solve:", solve.error);
