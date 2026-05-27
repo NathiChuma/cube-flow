@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Play, Pause, RotateCcw } from "lucide-react";
 
 interface SolveTimerProps {
-  onSolveComplete: (time: number) => void;
+  onSolveComplete: (time: number) => Promise<void>;
 }
 
 export function SolveTimer({ onSolveComplete }: SolveTimerProps) {
@@ -12,6 +12,7 @@ export function SolveTimer({ onSolveComplete }: SolveTimerProps) {
   const [inspectionTime, setInspectionTime] = useState(15);
   const [isReady, setIsReady] = useState(false);
   const [dnf, setDnf] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Timer interval
   useEffect(() => {
@@ -85,9 +86,11 @@ export function SolveTimer({ onSolveComplete }: SolveTimerProps) {
     setDnf(false);
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     if (time > 0) {
-      onSolveComplete(dnf ? -1 : time);
+      setIsSaving(true);
+      await onSolveComplete(dnf ? -1 : time);
+      setIsSaving(false);
       handleReset();
     }
   };
@@ -221,10 +224,20 @@ export function SolveTimer({ onSolveComplete }: SolveTimerProps) {
                 </button>
                 <button
                   onClick={handleFinish}
-                  className="flex items-center gap-2 bg-green-500 text-white hover:bg-green-600 active:bg-green-700 rounded-lg font-semibold py-2 px-4 sm:py-2 sm:px-6 transition-colors text-sm sm:text-base"
+                  disabled={isSaving}
+                  className="flex items-center gap-2 bg-green-500 text-white hover:bg-green-600 active:bg-green-700 rounded-lg font-semibold py-2 px-4 sm:py-2 sm:px-6 transition-colors text-sm sm:text-base disabled:opacity-70"
                 >
-                  <Check className="w-4 h-4" />
-                  Save
+                  {isSaving ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Check className="w-4 h-4" />
+                      Save
+                    </>
+                  )}
                 </button>
               </>
             ) : (
@@ -237,10 +250,20 @@ export function SolveTimer({ onSolveComplete }: SolveTimerProps) {
                 </button>
                 <button
                   onClick={handleFinish}
-                  className="flex items-center gap-2 bg-red-500 text-white hover:bg-red-600 active:bg-red-700 rounded-lg font-semibold py-2 px-4 sm:py-2 sm:px-6 transition-colors text-sm sm:text-base"
+                  disabled={isSaving}
+                  className="flex items-center gap-2 bg-red-500 text-white hover:bg-red-600 active:bg-red-700 rounded-lg font-semibold py-2 px-4 sm:py-2 sm:px-6 transition-colors text-sm sm:text-base disabled:opacity-70"
                 >
-                  <Check className="w-4 h-4" />
-                  Save DNF
+                  {isSaving ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Check className="w-4 h-4" />
+                      Save DNF
+                    </>
+                  )}
                 </button>
               </>
               
