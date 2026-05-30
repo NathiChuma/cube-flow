@@ -34,15 +34,11 @@ Cube Flow is a modern web application designed for speedcubers to track solve ti
 ## Project Structure
 
 ```txt
-src/
+client/
 ├── components/
 ├── pages/
 ├── hooks/
-├── services/
-├── types/
-├── utils/
-├── layouts/
-└── assets/
+└── lib/
 ```
 
 ## Installation
@@ -56,7 +52,7 @@ git clone <repository-url>
 ### Install Dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Start Development Server
