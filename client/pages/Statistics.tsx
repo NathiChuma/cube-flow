@@ -201,7 +201,7 @@ export default function Stats() {
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">DNF Rate</span>
-                <span className="font-mono font-bold text-orange-500 text-sm sm:text-base">{statsData?.userStats.dnfRate ? `${statsData?.userStats.dnfRate}%` : "-"}</span>
+                <span className="font-mono font-bold text-orange-500 text-sm sm:text-base">{statsData?.userStats.dnfRate ? `${statsData?.userStats.dnfRate}` : "-"}</span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-border">
                 <span className="text-foreground/60">Current Streak</span>
