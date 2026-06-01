@@ -198,7 +198,7 @@ export default function Timer() {
               <div className="space-y-4">
                 <div>
                   <p className="text-foreground/60 text-sm mb-1">Solves Today</p>
-                  <p className="text-3xl font-bold text-primary">
+                  <p className="text-3xl font-bold text-foreground">
                     {dailyStats.solves}
                   </p>
                 </div>
@@ -213,7 +213,7 @@ export default function Timer() {
                 {dailyStats.averageTime && (
                   <div>
                     <p className="text-foreground/60 text-sm mb-1">Average</p>
-                    <p className="text-2xl font-bold text-foreground">
+                    <p className="text-2xl font-bold text-primary">
                       {formatTime(dailyStats.averageTime)}
                     </p>
                   </div>

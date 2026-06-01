@@ -1,14 +1,14 @@
 import { Header } from "@/components/Header";
 import { Link } from "react-router-dom";
 import { ArrowRight, TrendingUp, Award, Target, Clock, Zap } from "lucide-react";
-import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { getUserStats, UserStats, userStatsCache } from "@shared/api";
 import { useEffect, useState } from "react";
 import { dummyStatsData } from "@/lib/dummy-data";
 import { SolvesTable } from "@/components/SolvesTable";
 
 export default function Stats() {
-  const COLORS = ["#A020F0", "#FF4500", "#10B981", "#F59E0B"];
+  const COLORS = ["#10B981", "#A020F0", "#FFA500", "#CC0000"];
   const [statsData, setStatsData] = useState<UserStats | null>(null);
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function Stats() {
               <p className="text-xs sm:text-sm font-semibold text-foreground/60">TOTAL</p>
               <Award className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
             </div>
-            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-mono">{statsData?.userStats.totalSolves ? `${statsData?.userStats.totalSolves}` : "-"}</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground font-mono">{statsData?.userStats.totalSolves ? `${statsData?.userStats.totalSolves}` : "-"}</p>
             <p className="text-xs text-foreground/50 mt-1">All Time</p>
           </div>
         </div>
@@ -120,10 +120,10 @@ export default function Stats() {
 
           {/* Session Stats Chart */}
           <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 w-full">
-            <h2 className="text-base sm:text-lg font-bold mb-4">Session Performance</h2>
+            <h2 className="text-base sm:text-lg font-bold mb-4">Daily Performance</h2>
             <div className="w-full h-48 sm:h-64 md:h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={statsData?.sessions.slice(0, 6)} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                <BarChart data={statsData?.sessions} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="date" stroke="hsl(var(--foreground)/0.6)" fontSize={10} angle={-45} textAnchor="end" height={60} />
                   <YAxis stroke="hsl(var(--foreground)/0.6)" fontSize={11} width={35} />
@@ -135,8 +135,12 @@ export default function Stats() {
                       fontSize: "12px",
                     }}
                   />
-                  <Bar dataKey="bestTime" fill="hsl(var(--primary))" />
-                  <Bar dataKey="avgTime" fill="hsl(var(--secondary))" />
+                  
+                  <Legend
+                    wrapperStyle={{ paddingTop: "20px" }}
+                  />
+                  <Bar dataKey="bestTime" name="Best Time" fill="#10B981" />
+                  <Bar dataKey="avgTime" name="Average Time" fill="hsl(var(--primary))" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -173,6 +177,10 @@ export default function Stats() {
                       borderRadius: "8px",
                       fontSize: "12px",
                     }}
+                  />
+                  <Legend
+                    verticalAlign="bottom"
+                    height={36}
                   />
                 </PieChart>
               </ResponsiveContainer>

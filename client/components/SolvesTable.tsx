@@ -101,8 +101,8 @@ export function SolvesTable({solves}: {solves: Solve[]}) {
           <p className="font-bold text-lg sm:text-xl text-primary font-mono">{avgTime}s</p>
         </div>
         <div className="hidden sm:block">
-          <p className="text-xs sm:text-sm text-foreground/60">Range</p>
-          <p className="font-bold text-lg sm:text-xl text-secondary font-mono">
+          <p className="text-xs sm:text-sm text-foreground/60">Best</p>
+          <p className="font-bold text-lg sm:text-xl text-green-600 font-mono">
             {validSolves.length > 0 ? `${Math.min(...validSolves.map((s) => s.time)).toFixed(2)}s` : "—"}
           </p>
         </div>
