@@ -206,7 +206,7 @@ export default function SignUp() {
                 </button>
               </div>
               <p className="text-xs text-foreground/50 mt-1">
-                Must be at least 6 characters
+                Must be at least 8 characters with uppercase, lowercase, numbers, and symbols.
               </p>
             </div>
 
