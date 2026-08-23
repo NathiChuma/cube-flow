@@ -87,7 +87,7 @@ export function Header() {
                 <div className="hidden sm:flex items-center gap-2 text-xs sm:text-sm">
                   <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
                     <span className="text-primary font-semibold">
-                      {user.username.charAt(0).toUpperCase()}
+                      {user.username?.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <span className="text-foreground/60">{user.username}</span>
