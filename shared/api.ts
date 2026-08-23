@@ -100,11 +100,10 @@ export var platformStatsCache: PlatformStats | null = null;
 export var userRecentSolvesCache: Record<string, GetSolvesResponse> = {};
 export var userStatsCache: Record<string, UserStats> = {};
 
-//const API_BASE = "http://localhost:3000/";
-const API_BASE = "https://cube-flow-backend.vercel.app/";
+const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export async function getPlatformStats(): Promise<void> {
-  const response = await fetch(`${API_BASE}stats/getPlatformStats`, {
+  const response = await fetch(`${API_BASE_URL}stats/getPlatformStats`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -119,7 +118,7 @@ export async function getPlatformStats(): Promise<void> {
 }
 
 export async function signIn(email: string, password: string): Promise<User | {error: string}> {
-  const response = await fetch(`${API_BASE}auth/signin`, {
+  const response = await fetch(`${API_BASE_URL}auth/signin`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -135,7 +134,7 @@ export async function signIn(email: string, password: string): Promise<User | {e
 }
 
 export async function signUp(username: string, email: string, password: string, country?: string): Promise<User | {error: string}> {
-  const response = await fetch(`${API_BASE}auth/signup`, {
+  const response = await fetch(`${API_BASE_URL}auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, email, password, country }),
@@ -151,7 +150,7 @@ export async function signUp(username: string, email: string, password: string, 
 }
 
 export async function sendResetPasswordEmail(email: string): Promise<{ success: boolean; error?: string }> {
-  const response = await fetch(`${API_BASE}auth/forgotPassword`, {
+  const response = await fetch(`${API_BASE_URL}auth/forgotPassword`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
@@ -167,7 +166,7 @@ export async function sendResetPasswordEmail(email: string): Promise<{ success: 
 }
 
 export async function resetPassword(email: string, code: string, password: string): Promise<{ success: boolean; error?: string }> {
-  const response = await fetch(`${API_BASE}auth/resetPassword`, {
+  const response = await fetch(`${API_BASE_URL}auth/resetPassword`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, code, password }),
@@ -183,7 +182,7 @@ export async function resetPassword(email: string, code: string, password: strin
 }
 
 export async function addSolve(solveData: CreateSolveRequest): Promise<Solve | {error: string}> {
-  const response = await fetch(`${API_BASE}solves/addSolve`, {
+  const response = await fetch(`${API_BASE_URL}solves/addSolve`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(solveData),
@@ -203,7 +202,7 @@ export async function addSolve(solveData: CreateSolveRequest): Promise<Solve | {
 }
 
 export async function getUserRecentSolves(userId: string): Promise<void> {
-  const response = await fetch(`${API_BASE}solves/getUserRecentSolves/${userId}`, {
+  const response = await fetch(`${API_BASE_URL}solves/getUserRecentSolves/${userId}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -218,7 +217,7 @@ export async function getUserRecentSolves(userId: string): Promise<void> {
 }
 
 export async function getAllSolves(): Promise<GetSolvesResponse> {
-  const response = await fetch(`${API_BASE}solves/getAllSolves`, {
+  const response = await fetch(`${API_BASE_URL}solves/getAllSolves`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -233,7 +232,7 @@ export async function getAllSolves(): Promise<GetSolvesResponse> {
 }
 
 export async function deleteSolve(solveId: string): Promise<{ success: boolean; error?: string }> {
-  const response = await fetch(`${API_BASE}solves/deleteSolve/${solveId}`, {
+  const response = await fetch(`${API_BASE_URL}solves/deleteSolve/${solveId}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
   });
@@ -247,7 +246,7 @@ export async function deleteSolve(solveId: string): Promise<{ success: boolean; 
 }
 
 export async function getUserStats(userId: string): Promise<void> {
-  const response = await fetch(`${API_BASE}stats/getUserStats/${userId}`, {
+  const response = await fetch(`${API_BASE_URL}stats/getUserStats/${userId}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -265,7 +264,7 @@ export async function getUserAnalysis(userStats: UserStats): Promise<AIAnalysis>
 
   var aiAnalysis: AIAnalysis | null = null;
 
-  await fetch(`${API_BASE}stats/getUserAnalysis`, {
+  await fetch(`${API_BASE_URL}stats/getUserAnalysis`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userStats }),
